@@ -110,6 +110,14 @@ async function run() {
       const user = await usersCollection.findOne(query);
       res.send({ isTrainer: user?.role === "trainer" });
     });
+
+    // use user Image
+    app.get("/users/image/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      res.send(user?.image);
+    });
   } finally {
   }
 }
