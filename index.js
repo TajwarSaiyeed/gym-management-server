@@ -71,6 +71,14 @@ async function run() {
       res.send(result);
     });
 
+    // get specific user
+    app.get("/users/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      res.send(user);
+    });
+
     // jwt
     app.get("/jwt", async (req, res) => {
       const email = req.query.email;
