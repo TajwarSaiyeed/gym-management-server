@@ -112,7 +112,7 @@ async function run() {
     });
 
     // use user Image
-    app.get("/users/image/:email", async (req, res) => {
+    app.get("/users/image/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
