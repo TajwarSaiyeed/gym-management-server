@@ -35,6 +35,7 @@ const verifyJWT = (req, res, next) => {
 async function run() {
   try {
     const usersCollection = client.db("gymdb").collection("users");
+    const membersCollection = client.db("gymdb").collection("members");
 
     // verify admin
     const verifyAdmin = async (req, res, next) => {
@@ -48,6 +49,27 @@ async function run() {
       }
       next();
     };
+
+    // verify trainer
+
+    const verifyTrainer = async (req, res, next) => {
+      const decodedEmail = req.decoded.email;
+      const query = { email: decodedEmail };
+      const user = await usersCollection.findOne(query);
+      if (user?.role !== "trainer") {
+        return res
+          .status(403)
+          .send({ error: 403, message: "forbidden access" });
+      }
+      next();
+    };
+
+    // add a member by verify trainer
+    app.post("/members", verifyJWT, verifyTrainer, async (req, res) => {
+      const member = req.body;
+      const result = await membersCollection.insertOne(member);
+      res.send(result);
+    });
 
     // jwt
     app.get("/jwt", async (req, res) => {
