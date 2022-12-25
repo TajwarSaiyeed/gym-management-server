@@ -116,7 +116,7 @@ async function run() {
       const email = req.params.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      res.send({ user });
+      res.send({ image: user?.image });
     });
   } finally {
   }
