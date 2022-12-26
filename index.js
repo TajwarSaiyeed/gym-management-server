@@ -80,10 +80,7 @@ async function run() {
 
     app.get("/members", verifyJWT, async (req, res) => {
       const query = {};
-      const members = await membersCollection
-        .find(query)
-        .toArray()
-        .sort({ _id: -1 });
+      const members = await membersCollection.find(query).toArray();
       res.send(members);
     });
 
