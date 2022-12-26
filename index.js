@@ -65,9 +65,16 @@ async function run() {
     };
 
     // add a member by verify trainer
-    app.post("/members", verifyJWT, verifyTrainer, async (req, res) => {
+    app.put("/members", verifyJWT, verifyTrainer, async (req, res) => {
       const member = req.body;
-      const result = await membersCollection.insertOne(member);
+      const email = member.email;
+      const query = { email: email };
+      const updateDoc = {
+        $set: member,
+      };
+      const result = await membersCollection.updateOne(query, updateDoc, {
+        upsert: true,
+      });
       res.send(result);
     });
 
