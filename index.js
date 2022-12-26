@@ -78,6 +78,12 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/members", verifyJWT, async (req, res) => {
+      const query = {};
+      const members = await membersCollection.find(query).toArray();
+      res.send(members);
+    });
+
     // get specific user
     app.get("/members/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
