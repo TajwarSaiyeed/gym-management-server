@@ -92,7 +92,7 @@ async function run() {
     });
 
     app.get("/members", verifyJWT, async (req, res) => {
-      const query = { role: "user" };
+      const query = {};
       const members = await membersCollection.find(query).toArray();
       res.send(members);
     });
