@@ -63,9 +63,22 @@ async function run() {
       }
       next();
     };
+    b;
+
+    const verifyAdminOrTrainer = async (req, res, next) => {
+      const decodedEmail = req.decoded.email;
+      const query = { email: decodedEmail };
+      const user = await usersCollection.findOne(query);
+      if (user?.role !== "admin" && user?.role !== "trainer") {
+        return res
+          .status(403)
+          .send({ error: 403, message: "forbidden access" });
+      }
+      next();
+    };
 
     // add a member by verify trainer
-    app.put("/members", verifyJWT, verifyTrainer, async (req, res) => {
+    app.put("/members", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const member = req.body;
       const email = member.email;
       const query = { email: email };
