@@ -96,7 +96,7 @@ async function run() {
       res.send(members);
     });
 
-    // get specific user
+    // get specific member
     app.get("/members/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
@@ -140,6 +140,14 @@ async function run() {
         options
       );
       res.send(result);
+    });
+
+    // get a user
+    app.get("/users/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      res.send(user);
     });
 
     // check admin
