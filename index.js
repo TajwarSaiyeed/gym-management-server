@@ -63,7 +63,6 @@ async function run() {
       }
       next();
     };
-    b;
 
     const verifyAdminOrTrainer = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
