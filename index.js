@@ -36,6 +36,7 @@ async function run() {
   try {
     const usersCollection = client.db("gymdb").collection("users");
     const membersCollection = client.db("gymdb").collection("members");
+    const dietCollection = client.db("gymdb").collection("diet");
 
     // verify admin
     const verifyAdmin = async (req, res, next) => {
@@ -75,6 +76,21 @@ async function run() {
       }
       next();
     };
+
+    // put diet data to db
+
+    app.put("/diet", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
+      const diet = req.body;
+      const email = diet.email;
+      const query = { email: email };
+      const updateDoc = {
+        $set: diet,
+      };
+      const result = await dietCollection.updateOne(query, updateDoc, {
+        upsert: true,
+      });
+      res.send(result);
+    });
 
     // add a member by verify trainer
     app.put("/members", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
