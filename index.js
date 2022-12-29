@@ -150,7 +150,7 @@ async function run() {
       res.send(users);
     });
 
-    app.get("/activeusers", verifyJWT, async (req, res) => {
+    app.get("/students", verifyJWT, async (req, res) => {
       const query = { role: "user" };
       const users = await usersCollection.find(query).toArray();
       res.send(users);
