@@ -82,7 +82,7 @@ async function run() {
     app.put("/diet", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const diet = req.body;
       const email = diet.email;
-      const query = { email: email };
+      const query = { email: email, day: diet.day };
       const updateDoc = {
         $set: diet,
       };
