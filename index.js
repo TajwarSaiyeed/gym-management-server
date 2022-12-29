@@ -95,11 +95,9 @@ async function run() {
     // get diet data from db
     app.get("/diet", verifyJWT, async (req, res) => {
       const email = req.query.email;
-      console.log(email);
       const day = req.query.day;
       const query = { email: email, day: day };
       const diet = await dietCollection.find(query).toArray();
-      // console.log(diet);
       res.send(diet);
     });
 
