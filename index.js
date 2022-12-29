@@ -151,7 +151,7 @@ async function run() {
     });
 
     app.get("/activeusers", verifyJWT, async (req, res) => {
-      const query = { isActive: true, role: "user" };
+      const query = { role: "user" };
       const users = await usersCollection.find(query).toArray();
       res.send(users);
     });
