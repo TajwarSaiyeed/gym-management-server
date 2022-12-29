@@ -181,9 +181,8 @@ async function run() {
       res.send(user);
     });
 
-    //  make user active
-    app.patch("/users/active", verifyJWT, async (req, res) => {
-      const email = req.query.email;
+    app.patch("/users/active/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
       const active = req.body.active;
       console.log(email, active);
       const query = { email: email };
