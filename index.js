@@ -97,7 +97,7 @@ async function run() {
       const email = req.query.email;
       console.log(email);
       const day = req.query.day;
-      const query = { email: email };
+      const query = { email: email, day: day };
       const diet = await dietCollection.find(query).toArray();
       // console.log(diet);
       res.send(diet);
