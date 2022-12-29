@@ -150,8 +150,16 @@ async function run() {
       res.send(users);
     });
 
+    // students
     app.get("/students", verifyJWT, async (req, res) => {
       const query = { role: "user" };
+      const users = await usersCollection.find(query).toArray();
+      res.send(users);
+    });
+
+    // trainers
+    app.get("/trainers", verifyJWT, async (req, res) => {
+      const query = { role: "trainer" };
       const users = await usersCollection.find(query).toArray();
       res.send(users);
     });
