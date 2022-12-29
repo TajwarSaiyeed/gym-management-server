@@ -150,6 +150,12 @@ async function run() {
       res.send(users);
     });
 
+    app.get("/activeusers", verifyJWT, async (req, res) => {
+      const query = { isActive: true, role: "user" };
+      const users = await usersCollection.find(query).toArray();
+      res.send(users);
+    });
+
     // add a user
     app.put("/users/:email", async (req, res) => {
       const email = req.params.email;
