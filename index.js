@@ -92,6 +92,15 @@ async function run() {
       res.send(result);
     });
 
+    // get diet data from db
+    app.get("/diet", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const day = req.query.day;
+      const query = { email: email, day: day };
+      const diet = await dietCollection.find(query).toArray();
+      res.send(diet);
+    });
+
     // add a member by verify trainer
     app.put("/members", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const member = req.body;
