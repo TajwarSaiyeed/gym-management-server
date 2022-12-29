@@ -181,6 +181,19 @@ async function run() {
       res.send(user);
     });
 
+    //  make user active
+    app.patch("/users/active", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const active = req.body.active;
+      console.log(email, active);
+      const query = { email: email };
+      const updateDoc = {
+        $set: { isActive: active },
+      };
+      const result = await usersCollection.updateOne(query, updateDoc);
+      res.send(result);
+    });
+
     // check admin
     app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
