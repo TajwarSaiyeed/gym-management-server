@@ -183,8 +183,7 @@ async function run() {
 
     app.patch("/users/active/:email", async (req, res) => {
       const email = req.params.email;
-      const active = req.body.active;
-      console.log(email, active);
+      const active = req.body.isActive;
       const query = { email: email };
       const updateDoc = {
         $set: { isActive: active },
