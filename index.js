@@ -181,7 +181,7 @@ async function run() {
       res.send(user);
     });
 
-    app.patch("/users/active/:email", verifyJWT, async (req, res) => {
+    app.patch("/users/active/:email", async (req, res) => {
       const email = req.params.email;
       const active = req.body.active;
       console.log(email, active);
