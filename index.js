@@ -143,6 +143,26 @@ async function run() {
       res.status(403).send({ accessToken: "" });
     });
 
+    // delete user and member
+
+    app.delete("/users/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const checkEmail = req.decoded.email;
+      const users = await usersCollection.find({}).toArray();
+      const finduserone = users.find((user) => user.email === checkEmail);
+      const findusertwo = users.find((user) => user.email === email);
+      if (email === checkEmail) {
+        return res.send({ error: 403, message: "You can't delete yourself" });
+      } else if (finduserone.role === findusertwo.role) {
+        return res.send({ error: 403, message: "You can't delete Trainer" });
+      } else {
+        const result = await usersCollection.deleteOne(query);
+        const result2 = await membersCollection.deleteOne(query);
+        res.send(result);
+      }
+    });
+
     // get all users for admin
     app.get("/users", verifyJWT, async (req, res) => {
       const query = {};
