@@ -79,9 +79,8 @@ async function run() {
     };
 
     // add group
-    app.post("/groups", async (req, res) => {
+    app.post("/groups", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const group = req.body;
-      console.log(group);
       const result = await groupsCollection.insertOne(group);
       res.send(result);
     });
