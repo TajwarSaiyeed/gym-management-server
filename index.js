@@ -37,6 +37,7 @@ async function run() {
     const usersCollection = client.db("gymdb").collection("users");
     const membersCollection = client.db("gymdb").collection("members");
     const dietCollection = client.db("gymdb").collection("diet");
+    const groupsCollection = client.db("gymdb").collection("groups");
 
     // verify admin
     const verifyAdmin = async (req, res, next) => {
@@ -76,6 +77,29 @@ async function run() {
       }
       next();
     };
+
+    // add group
+    app.post("/groups", async (req, res) => {
+      const group = req.body;
+      console.log(group);
+      const result = await groupsCollection.insertOne(group);
+      res.send(result);
+    });
+
+    // add member to group
+    app.patch("/groups", async (req, res) => {
+      const name = req.query.name;
+      const member = req.body;
+      const query = { name: name };
+      const group = await groupsCollection.findOne(query);
+      const members = group.members;
+      members.push(member);
+      const updateDoc = {
+        $set: { members: members },
+      };
+      const result = await groupsCollection.updateOne(query, updateDoc);
+      res.send(result);
+    });
 
     // put diet data to db
 
