@@ -99,7 +99,6 @@ async function run() {
       const group = await groupsCollection.findOne(query);
       const members = group.members;
       const isExist = members.find((m) => m.email === member.email);
-      console.log(isExist);
       if (!isExist) {
         members.push(member);
         const updateDoc = {
