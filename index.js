@@ -100,9 +100,7 @@ async function run() {
       const members = group.members;
       const isExist = members.find((m) => m.email === member.email);
       if (isExist) {
-        return res
-          .status(403)
-          .send({ error: 403, message: "member already exist" });
+        return res.send({ error: 403, message: "member already exist" });
       }
 
       members.push(member);
