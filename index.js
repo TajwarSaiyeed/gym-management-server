@@ -99,16 +99,16 @@ async function run() {
       const group = await groupsCollection.findOne(query);
       const members = group.members;
       const isExist = members.find((m) => m.email === member.email);
-      if (isExist) {
-        return res.send({ error: 403, message: "member already exist" });
+      console.log(isExist);
+      if (!isExist) {
+        members.push(member);
+        const updateDoc = {
+          $set: { members: members },
+        };
+        const result = await groupsCollection.updateOne(query, updateDoc);
+        res.send(result);
       }
-
-      members.push(member);
-      const updateDoc = {
-        $set: { members: members },
-      };
-      const result = await groupsCollection.updateOne(query, updateDoc);
-      res.send(result);
+      return res.send({ error: 403, message: "member already exist" });
     });
 
     // put diet data to db
