@@ -92,7 +92,7 @@ async function run() {
     });
 
     // add member to group
-    app.patch("/groups", async (req, res) => {
+    app.patch("/groups", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const name = req.query.name;
       const member = req.body;
       const query = { name: name };
