@@ -98,6 +98,13 @@ async function run() {
       const query = { name: name };
       const group = await groupsCollection.findOne(query);
       const members = group.members;
+      const isExist = members.find((m) => m.email === member.email);
+      if (isExist) {
+        return res
+          .status(403)
+          .send({ error: 403, message: "member already exist" });
+      }
+
       members.push(member);
       const updateDoc = {
         $set: { members: members },
