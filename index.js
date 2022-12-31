@@ -78,6 +78,12 @@ async function run() {
       next();
     };
 
+    // all groups
+    app.get("/groups", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
+      const groups = await groupsCollection.find({}).toArray();
+      res.send(groups);
+    });
+
     // add group
     app.post("/groups", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const group = req.body;
