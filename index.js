@@ -79,7 +79,7 @@ async function run() {
     };
 
     // all groups
-    app.get("/groups", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
+    app.get("/groups", verifyJWT, async (req, res) => {
       const groups = await groupsCollection.find({}).toArray();
       res.send(groups);
     });
