@@ -79,36 +79,36 @@ async function run() {
       next();
     };
 
-    // create payment intent
-    app.post("/create-payment-intent", async (req, res) => {
-      const data = req.body;
-      const price = data.price;
-      const amount = price * 100;
-      const paymentIntent = await stripe.paymentIntents.create({
-        currency: "usd",
-        amount: amount,
-        payment_method_types: ["card"],
-      });
-      res.send({
-        clientSecret: paymentIntent.client_secret,
-      });
-    });
+    // // create payment intent
+    // app.post("/create-payment-intent", async (req, res) => {
+    //   const data = req.body;
+    //   const price = data.price;
+    //   const amount = price * 100;
+    //   const paymentIntent = await stripe.paymentIntents.create({
+    //     currency: "usd",
+    //     amount: amount,
+    //     payment_method_types: ["card"],
+    //   });
+    //   res.send({
+    //     clientSecret: paymentIntent.client_secret,
+    //   });
+    // });
 
-    // payments
-    app.post("/payments", verifyJWT, async (req, res) => {
-      const payment = req.body;
-      const result = await paymentsCollection.insertOne(payment);
-      const id = payment.uId;
-      const filter = { _id: ObjectId(id) };
-      const updatedDoc = {
-        $set: {
-          paid: true,
-          transactionId: payment.transactionId,
-        },
-      };
-      const updateResult = await usersCollection.updateOne(filter, updatedDoc);
-      res.send(result);
-    });
+    // // payments
+    // app.post("/payments", verifyJWT, async (req, res) => {
+    //   const payment = req.body;
+    //   const result = await paymentsCollection.insertOne(payment);
+    //   const id = payment.uId;
+    //   const filter = { _id: ObjectId(id) };
+    //   const updatedDoc = {
+    //     $set: {
+    //       paid: true,
+    //       transactionId: payment.transactionId,
+    //     },
+    //   };
+    //   const updateResult = await usersCollection.updateOne(filter, updatedDoc);
+    //   res.send(result);
+    // });
 
     // add or update fees
     app.patch("/fees", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
