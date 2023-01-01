@@ -78,6 +78,17 @@ async function run() {
       next();
     };
 
+    // add or update salary
+    app.patch("/salary", verifyJWT, verifyAdmin, async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const updateDoc = {
+        $set: { salary: user.salary },
+      };
+      const result = await usersCollection.updateOne(query, updateDoc);
+      res.send(result);
+    });
+
     // all groups
     app.get("/groups", verifyJWT, async (req, res) => {
       const groups = await groupsCollection.find({}).toArray();
