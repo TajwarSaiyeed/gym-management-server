@@ -9,7 +9,10 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 app.use(
   cors({
-    origin: ["http://localhost:5000/"],
+    origin: [
+      "http://localhost:3000/",
+      "https://gym-management-server.vercel.app",
+    ],
   })
 );
 app.use(express.json());
