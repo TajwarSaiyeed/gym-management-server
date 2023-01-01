@@ -91,6 +91,19 @@ async function run() {
       res.send(result);
     });
 
+    // delete group
+    app.delete(
+      "/groups/:id",
+      verifyJWT,
+      verifyAdminOrTrainer,
+      async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await groupsCollection.deleteOne(query);
+        res.send(result);
+      }
+    );
+
     // add member to group
     app.patch("/groups", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
       const name = req.query.name;
