@@ -243,9 +243,7 @@ async function run() {
           const result = await usersCollection.updateOne(filter, updateUserDoc);
           res.send(result);
         }
-      }
-
-      if (check.role === "trainer" && check.email === email) {
+      } else if (check.role === "trainer" && check.email === email) {
         const updateTrainerDoc = {
           $set: {
             name: user.name,
@@ -256,9 +254,7 @@ async function run() {
           updateTrainerDoc
         );
         res.send(result);
-      }
-
-      if (userDB.role === "trainer" || userDB.role === "admin") {
+      } else if (userDB.role === "trainer" || userDB.role === "admin") {
         return res.send({ error: 403, message: "You can't update Trainer" });
       }
       const updateDoc = {
