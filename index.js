@@ -209,6 +209,68 @@ async function run() {
       }
     });
 
+    // update user by admin or trainer
+    app.patch("/users/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      const filter = { email: email };
+      const userDB = await usersCollection.findOne(filter);
+
+      const adminTrainer = req.decoded.email;
+      const check = await usersCollection.findOne({ email: adminTrainer });
+
+      if (check.role === "admin") {
+        if (userDB.role === "trainer") {
+          const updateTrainerDoc = {
+            $set: {
+              name: user.name,
+            },
+          };
+          const result = await usersCollection.updateOne(
+            filter,
+            updateTrainerDoc
+          );
+          res.send(result);
+        }
+
+        if (userDB.role === "user") {
+          const updateUserDoc = {
+            $set: {
+              name: user.name,
+              role: user.role,
+            },
+          };
+          const result = await usersCollection.updateOne(filter, updateUserDoc);
+          res.send(result);
+        }
+      }
+
+      if (check.role === "trainer" && check.email === email) {
+        const updateTrainerDoc = {
+          $set: {
+            name: user.name,
+          },
+        };
+        const result = await usersCollection.updateOne(
+          filter,
+          updateTrainerDoc
+        );
+        res.send(result);
+      }
+
+      if (userDB.role === "trainer" || userDB.role === "admin") {
+        return res.send({ error: 403, message: "You can't update Trainer" });
+      }
+      const updateDoc = {
+        $set: {
+          name: user.name,
+          role: user.role,
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
     // get all users for admin
     app.get("/users", verifyJWT, async (req, res) => {
       const query = {};
@@ -254,7 +316,7 @@ async function run() {
       const user = await usersCollection.findOne(query);
       res.send(user);
     });
-
+    // active user
     app.patch("/users/active/:email", async (req, res) => {
       const email = req.params.email;
       const active = req.body.isActive;
@@ -265,7 +327,7 @@ async function run() {
       const result = await usersCollection.updateOne(query, updateDoc);
       res.send(result);
     });
-
+    // deactive user
     app.patch("/users/deactive/:email", async (req, res) => {
       const email = req.params.email;
       const active = req.body.isActive;
