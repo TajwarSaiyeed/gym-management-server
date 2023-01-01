@@ -78,6 +78,16 @@ async function run() {
       next();
     };
 
+    // add or update fees
+    app.patch("/fees", verifyJWT, verifyAdminOrTrainer, async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const updateDoc = {
+        $set: { fees: user.fees },
+      };
+      const result = await usersCollection.updateOne(query, updateDoc);
+      res.send(result);
+    });
     // add or update salary
     app.patch("/salary", verifyJWT, verifyAdmin, async (req, res) => {
       const user = req.body;
