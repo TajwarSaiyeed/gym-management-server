@@ -7,7 +7,11 @@ const port = process.env.PORT || 5000;
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5000/"],
+  })
+);
 app.use(express.json());
 
 const uri = process.env.DB_URI;
