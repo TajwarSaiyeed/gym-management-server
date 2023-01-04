@@ -112,6 +112,21 @@ async function run() {
       res.send(result);
     });
 
+    app.patch("/notification/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const notificationBody = req.body.preValue;
+
+      console.log(notificationBody);
+      const query = { email: email };
+      const updatedDoc = {
+        $set: {
+          preValue: notificationBody,
+        },
+      };
+      const result = await notificationCollection.updateOne(query, updatedDoc);
+      res.send(result);
+    });
+
     //get notification
     app.get("/notification", verifyJWT, async (req, res) => {
       const email = req.query.email;
