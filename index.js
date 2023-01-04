@@ -44,6 +44,9 @@ async function run() {
     const dietCollection = client.db("gymdb").collection("diet");
     const groupsCollection = client.db("gymdb").collection("groups");
     const paymentsCollection = client.db("gymdb").collection("payments");
+    const notificationCollection = client
+      .db("gymdb")
+      .collection("notifications");
 
     // verify admin
     const verifyAdmin = async (req, res, next) => {
@@ -83,6 +86,30 @@ async function run() {
       }
       next();
     };
+
+    app.patch("/notification", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const notificationBody = req.body;
+      const query = { email: email };
+      const notification = await notificationCollection.findOne(query);
+
+      if (notification) {
+        const upData = [...notification.text, ...notificationBody.text];
+        const updatedDoc = {
+          $set: {
+            text: upData,
+          },
+        };
+        const result = await notificationCollection.updateOne(
+          query,
+          updatedDoc
+        );
+        return res.send(result);
+      }
+
+      const result = await notificationCollection.insertOne(notificationBody);
+      res.send(result);
+    });
 
     // create payment intent
     app.post("/create-payment-intent", async (req, res) => {
