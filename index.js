@@ -115,8 +115,6 @@ async function run() {
     app.patch("/notification/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const notificationBody = req.body.preValue;
-
-      console.log(notificationBody);
       const query = { email: email };
       const updatedDoc = {
         $set: {
