@@ -87,6 +87,7 @@ async function run() {
       next();
     };
 
+    // NOTIFICATION
     app.patch("/notification", verifyJWT, async (req, res) => {
       const email = req.query.email;
       const notificationBody = req.body;
@@ -109,6 +110,14 @@ async function run() {
 
       const result = await notificationCollection.insertOne(notificationBody);
       res.send(result);
+    });
+
+    //get notification
+    app.get("/notification", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const notification = await notificationCollection.findOne(query);
+      res.send(notification);
     });
 
     // create payment intent
