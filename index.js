@@ -101,6 +101,14 @@ async function run() {
       }
     );
 
+    // get exercise by email
+    app.get("/getexercisebyuser", verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await exercisesCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // NOTIFICATION
     app.patch("/notification", verifyJWT, async (req, res) => {
       const email = req.query.email;
