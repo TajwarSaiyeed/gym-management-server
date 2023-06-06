@@ -48,6 +48,8 @@ async function run() {
       .db("gymdb")
       .collection("notifications");
 
+    const exercisesCollection = client.db("gymdb").collection("exercises");
+
     // verify admin
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -86,6 +88,18 @@ async function run() {
       }
       next();
     };
+
+    // Exercise
+    app.post(
+      "/addexercise",
+      verifyJWT,
+      verifyAdminOrTrainer,
+      async (req, res) => {
+        const exercise = req.body;
+        const result = await exercisesCollection.insertOne(exercise);
+        res.send(result);
+      }
+    );
 
     // NOTIFICATION
     app.patch("/notification", verifyJWT, async (req, res) => {
