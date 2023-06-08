@@ -1,7 +1,8 @@
+const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModels");
 const User = require("../models/userModel");
 
-const accessChat = async (req, res) => {
+const accessChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
   if (!userId) {
     console.log("UserId param not sent with request");
@@ -55,10 +56,10 @@ const accessChat = async (req, res) => {
       throw new Error(error.message);
     }
   }
-};
+});
 
 // fetching all chats
-const fetchChats = async (req, res) => {
+const fetchChats = asyncHandler(async (req, res) => {
   try {
     Chat.find({
       users: {
@@ -82,9 +83,9 @@ const fetchChats = async (req, res) => {
     res.status(400);
     throw new Error(error.message);
   }
-};
+});
 
-const createGroupChat = async (req, res) => {
+const createGroupChat = asyncHandler(async (req, res) => {
   if (!req.body.users || !req.body.name) {
     return res.status(400).send({
       message: "Please Fill all the fields",
@@ -117,9 +118,9 @@ const createGroupChat = async (req, res) => {
     res.status(400);
     throw new Error(error.message);
   }
-};
+});
 
-const renameGroup = async (req, res) => {
+const renameGroup = asyncHandler(async (req, res) => {
   const { chatId, chatName } = req.body;
   const updateChat = await Chat.findByIdAndUpdate(
     chatId,
@@ -135,9 +136,9 @@ const renameGroup = async (req, res) => {
   } else {
     res.json(updateChat);
   }
-};
+});
 
-const addToGroup = async (req, res) => {
+const addToGroup = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
   const added = await Chat.findByIdAndUpdate(
     chatId,
@@ -157,9 +158,9 @@ const addToGroup = async (req, res) => {
   } else {
     res.json(added);
   }
-};
+});
 
-const removeFromGroup = async (req, res) => {
+const removeFromGroup = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
   const removed = await Chat.findByIdAndUpdate(
     chatId,
@@ -179,7 +180,7 @@ const removeFromGroup = async (req, res) => {
   } else {
     res.json(removed);
   }
-};
+});
 
 module.exports = {
   accessChat,

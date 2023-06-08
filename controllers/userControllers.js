@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
-
+const asyncHandler = require("express-async-handler");
 // /api/user?search=trainer
-const allUsers = async (req, res) => {
+const allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
         $or: [
@@ -15,6 +15,6 @@ const allUsers = async (req, res) => {
   });
 
   res.json(users);
-};
+});
 
 module.exports = { allUsers };
