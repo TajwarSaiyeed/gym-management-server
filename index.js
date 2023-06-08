@@ -5,6 +5,10 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 8000;
 const jwt = require("jsonwebtoken");
+const verifyJWT = require("./middleware/verifyJWT");
+const connectDB = require("./config/db");
+const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 app.use(
@@ -14,6 +18,10 @@ app.use(
 );
 app.use(express.json());
 
+// updated code
+connectDB();
+
+// old code
 const uri = process.env.DB_URI;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -21,21 +29,9 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-const verifyJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  // console.log(authHeader);
-  if (!authHeader) {
-    return res.status(401).send({ error: 401, message: "Unauthorized Access" });
-  }
-  const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
-    if (err) {
-      return res.status(403).send({ error: 403, message: "Forbidded Access" });
-    }
-    req.decoded = decoded;
-    next();
-  });
-};
+// updated code
+app.use("/api/user", verifyJWT, userRoutes);
+app.use("/api/chat", verifyJWT, chatRoutes);
 
 async function run() {
   try {
@@ -88,7 +84,6 @@ async function run() {
       }
       next();
     };
-
     // Exercise
     app.post(
       "/addexercise",
@@ -310,9 +305,13 @@ async function run() {
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       if (user) {
-        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, {
-          expiresIn: "5d",
-        });
+        const token = jwt.sign(
+          { email, _id: user._id },
+          process.env.ACCESS_TOKEN,
+          {
+            expiresIn: "5d",
+          }
+        );
         return res.send({ accessToken: token });
       }
       res.status(403).send({ accessToken: "" });
