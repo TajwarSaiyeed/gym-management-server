@@ -9,6 +9,7 @@ const verifyJWT = require("./middleware/verifyJWT");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 app.use(
@@ -32,6 +33,7 @@ const client = new MongoClient(uri, {
 // updated code
 app.use("/api/user", verifyJWT, userRoutes);
 app.use("/api/chat", verifyJWT, chatRoutes);
+app.use("/api/message", verifyJWT, messageRoutes);
 
 async function run() {
   try {
