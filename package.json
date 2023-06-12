@@ -21,5 +21,7 @@
     "mongoose": "^7.2.2",
     "socket.io": "^4.6.2",
     "stripe": "^11.5.0"
+  }, "engines": {
+    "node": ">=14 <15"
   }
 }
