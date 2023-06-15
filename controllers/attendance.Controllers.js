@@ -37,7 +37,7 @@ module.exports.updateAttendance = async (req, res) => {
   // if document exists, update it
 
   if (isExist) {
-    res.status(400).json({
+    return res.status(400).json({
       status: "fail",
       message: "Attendance already exists",
     });
