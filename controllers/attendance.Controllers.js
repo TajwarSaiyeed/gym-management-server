@@ -37,17 +37,10 @@ module.exports.updateAttendance = async (req, res) => {
   // if document exists, update it
 
   if (isExist) {
-    const result = await Attendance.findOneAndUpdate(
-      filter,
-      {
-        attendanceStatus: true,
-      },
-      { upsert: true }
-    );
-
-    return res
-      .status(201)
-      .json({ status: "success", message: "Attendance updated", data: result });
+    res.status(400).json({
+      status: "fail",
+      message: "Attendance already exists",
+    });
   }
 
   // if document does not exist, create it
@@ -62,4 +55,23 @@ module.exports.updateAttendance = async (req, res) => {
   return res
     .status(201)
     .json({ status: "success", message: "Attendance created", data: result });
+};
+
+module.exports.present = async (req, res) => {
+  const email = req.params.email;
+  const date = req.query.date;
+  const { attendanceStatus } = req.body;
+  const filter = { email: email, date: date };
+
+  const result = await Attendance.findOneAndUpdate(
+    filter,
+    {
+      attendanceStatus: attendanceStatus,
+    },
+    { upsert: true }
+  );
+
+  return res
+    .status(201)
+    .json({ status: "success", message: "Attendance updated", data: result });
 };

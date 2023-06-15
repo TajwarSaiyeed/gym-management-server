@@ -6,6 +6,8 @@ router.route("/").get(attendanceControllers.allAttendanceList);
 router
   .route("/:email")
   .get(attendanceControllers.getAttendanceByEmail)
-  .patch(attendanceControllers.updateAttendance);
+  .put(attendanceControllers.updateAttendance);
+
+router.route("/:email/present").patch(attendanceControllers.present);
 
 module.exports = router;
