@@ -50,6 +50,7 @@ module.exports.updateAttendance = async (req, res) => {
     date,
     day,
     attendanceStatus,
+    user: req.decoded._id,
   });
 
   return res
