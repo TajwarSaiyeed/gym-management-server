@@ -1,7 +1,9 @@
 const User = require("../models/user.Model");
+
 const asyncHandler = require("express-async-handler");
 // /api/user?search=trainer
-const allUsers = asyncHandler(async (req, res) => {
+
+module.exports.allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
         $or: [
@@ -17,4 +19,14 @@ const allUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
-module.exports = { allUsers };
+module.exports.students = asyncHandler(async (req, res) => {
+  try {
+    const students = await User.find({ role: "student" });
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+});
