@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+const User = require("../models/user.Model");
 const asyncHandler = require("express-async-handler");
 // /api/user?search=trainer
 const allUsers = asyncHandler(async (req, res) => {

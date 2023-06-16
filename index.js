@@ -7,11 +7,12 @@ const port = process.env.PORT || 8000;
 const jwt = require("jsonwebtoken");
 const verifyJWT = require("./middleware/verifyJWT");
 const connectDB = require("./config/db");
-const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes");
-const messageRoutes = require("./routes/messageRoutes");
-const attendanceRoutes = require("./routes/attendanceRoutes");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const userRoutes = require("./routes/user.routes");
+const chatRoutes = require("./routes/chat.routes");
+const messageRoutes = require("./routes/message.routes");
+const attendanceRoutes = require("./routes/attendance.routes");
+const feesRoutes = require("./routes/fees.routes");
 
 app.use(
   cors({
@@ -36,6 +37,7 @@ app.use("/api/user", verifyJWT, userRoutes);
 app.use("/api/chat", verifyJWT, chatRoutes);
 app.use("/api/message", verifyJWT, messageRoutes);
 app.use("/api/attendance", verifyJWT, attendanceRoutes);
+app.use("/api/fees", verifyJWT, feesRoutes);
 
 async function run() {
   try {
