@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const Fees = require("../models/fees.Model");
-const { ObjectId } = require("mongodb");
 
 // get all fees for admin
 module.exports.getAllFees = asyncHandler(async (req, res) => {
@@ -56,10 +55,10 @@ module.exports.createFee = asyncHandler(async (req, res) => {
 
 // get all fees by student
 module.exports.getAllFeesByStudent = asyncHandler(async (req, res) => {
-  const id = req.params.id;
+  const email = req.query.email;
   try {
     const fees = await Fees.find({
-      studentId: id,
+      email: email,
     }).populate("studentId");
 
     res.status(200).json({

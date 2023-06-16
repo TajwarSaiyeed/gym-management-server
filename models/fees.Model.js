@@ -6,6 +6,10 @@ const feesSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    email: {
+      type: String,
+      required: true,
+    },
     month: {
       type: String,
       enum: [
