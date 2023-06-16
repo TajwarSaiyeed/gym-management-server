@@ -19,7 +19,7 @@ module.exports.getAllFees = asyncHandler(async (req, res) => {
 
 // create a new fee by admin or trainer
 module.exports.createFee = asyncHandler(async (req, res) => {
-  const { month, year } = req.query;
+  const { month, year, email } = req.query;
   const { studentId, amount, note } = req.body;
 
   const isExist = await Fees.findOne({ studentId, month, year });
@@ -33,6 +33,7 @@ module.exports.createFee = asyncHandler(async (req, res) => {
 
   try {
     const fee = await Fees.create({
+      email,
       studentId,
       month,
       year,
