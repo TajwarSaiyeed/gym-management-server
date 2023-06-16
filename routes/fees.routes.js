@@ -17,6 +17,9 @@ router
 router.route("/student").get(feesController.getAllFeesByStudent);
 
 // paid the fee by student
-router.route("/student/:id").patch(feesController.paidFee);
+router
+  .route("/student/:id")
+  .get(feesController.getOneFee)
+  .patch(feesController.paidFee);
 
 module.exports = router;

@@ -74,6 +74,33 @@ module.exports.getAllFeesByStudent = asyncHandler(async (req, res) => {
   }
 });
 
+// get one
+
+module.exports.getOneFee = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const fee = await Fees.findById(id);
+
+    if (!fee) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Fee not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: fee,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+});
+
 // paid the fee by student
 
 module.exports.paidFee = asyncHandler(async (req, res) => {
