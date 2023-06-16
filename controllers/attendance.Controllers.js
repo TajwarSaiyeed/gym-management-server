@@ -1,7 +1,7 @@
 const Attendance = require("../models/attendance.Model");
 
 module.exports.allAttendanceList = async (req, res) => {
-  const result = await Attendance.find();
+  const result = await Attendance.find().populate("user");
 
   return res.status(200).json({
     status: "success",
