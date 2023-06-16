@@ -13,10 +13,10 @@ router
   .put(verifyAdmin, feesController.createFee);
 
 // get all fees by student
+
+router.route("/student").get(feesController.getAllFeesByStudent);
+
 // paid the fee by student
-router
-  .route("/student/:id")
-  .get(feesController.getAllFeesByStudent)
-  .patch(feesController.paidFee);
+router.route("/student/:id").patch(feesController.paidFee);
 
 module.exports = router;
