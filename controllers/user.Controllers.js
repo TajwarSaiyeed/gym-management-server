@@ -21,8 +21,12 @@ module.exports.allUsers = asyncHandler(async (req, res) => {
 
 module.exports.students = asyncHandler(async (req, res) => {
   try {
-    const students = await User.find({ role: "student" });
-    res.json(students);
+    const students = await User.find({ role: "user" });
+
+    res.status(200).json({
+      status: "success",
+      data: students,
+    });
   } catch (error) {
     res.status(500).json({
       status: "fail",
