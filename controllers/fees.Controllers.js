@@ -4,11 +4,18 @@ const { ObjectId } = require("mongodb");
 
 // get all fees for admin
 module.exports.getAllFees = asyncHandler(async (req, res) => {
-  const fees = await Fees.find().populate("studentId");
-  res.status(200).json({
-    status: "success",
-    data: fees,
-  });
+  try {
+    const fees = await Fees.find().populate("studentId");
+    res.status(200).json({
+      status: "success",
+      data: fees,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
 });
 
 // create a new fee by admin or trainer
