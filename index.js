@@ -552,6 +552,14 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("notification", (data) => {
+    socket.broadcast.emit("notification", data);
+  });
+
+  socket.on("dietSchedule", (data) => {
+    socket.broadcast.emit("dietSchedule", data);
+  });
+
   socket.off("setup", () => {
     console.log("User disconnected");
     socket.leave(userData._id);
