@@ -2,10 +2,12 @@ const asyncHandler = require("express-async-handler");
 const Notification = require("../models/notification.Model");
 
 module.exports.addNotification = asyncHandler(async (req, res) => {
-  const { notificationType, notificationText, isRead, pathName, to } = req.body;
+  const { notificationType, email, notificationText, isRead, pathName, to } =
+    req.body;
 
   const notification = {
     notificationType,
+    email,
     notificationText,
     isRead,
     pathName,
