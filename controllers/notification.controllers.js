@@ -1,19 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Notification = require("../models/notification.Model");
 
-// add notifcation
-
-/**
-  {
-    "notificationType": "message" || "exercise" || "diet" || "payment",
-    "notificationText": "You have a new message",
-    "isRead": false,
-    "pathName": "/diet/:dayname" || "/home/userexercises" || "/home/messages",
-    "to": "5f9d7a3b2b0d3c2d0c6f0b1a",
-    "from": "5f9d7a3b2b0d3c2d0c6f0b1a"
-  }
-*/
-
 module.exports.addNotification = asyncHandler(async (req, res) => {
   const { notificationType, notificationText, isRead, pathName, to } = req.body;
 
