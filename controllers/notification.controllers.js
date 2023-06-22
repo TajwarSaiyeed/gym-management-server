@@ -55,12 +55,12 @@ module.exports.markAsRead = asyncHandler(async (req, res) => {
 });
 
 // get all notifications
-module.exports.getNotificationById = asyncHandler(async (req, res) => {
+module.exports.getNotificationByEmail = asyncHandler(async (req, res) => {
   try {
-    const id = req.params.id;
-    const decodedId = req.decoded._id;
+    const email = req.query.email;
+    const decodedEmail = req.decoded.email;
     const notification = await Notification.find({
-      to: id,
+      email: email,
     })
       .populate("to")
       .populate("from", "name");
@@ -70,7 +70,7 @@ module.exports.getNotificationById = asyncHandler(async (req, res) => {
       throw new Error("Notification not found");
     }
 
-    if (id !== decodedId) {
+    if (email !== decodedEmail) {
       res.status(401);
       throw new Error("Not authorized to get notification");
     } else {
