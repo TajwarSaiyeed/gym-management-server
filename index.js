@@ -13,6 +13,7 @@ const chatRoutes = require("./routes/chat.routes");
 const messageRoutes = require("./routes/message.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
 const feesRoutes = require("./routes/fees.routes");
+const notificationRoutes = require("./routes/notification.routes");
 
 app.use(
   cors({
@@ -32,12 +33,13 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-// updated code
+// updating code
 app.use("/api/user", verifyJWT, userRoutes);
 app.use("/api/chat", verifyJWT, chatRoutes);
 app.use("/api/message", verifyJWT, messageRoutes);
 app.use("/api/attendance", verifyJWT, attendanceRoutes);
 app.use("/api/fees", verifyJWT, feesRoutes);
+app.use("/api/notification", verifyJWT, notificationRoutes);
 
 async function run() {
   try {
