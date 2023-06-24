@@ -15,6 +15,9 @@ const attendanceRoutes = require("./routes/attendance.routes");
 const feesRoutes = require("./routes/fees.routes");
 const notificationRoutes = require("./routes/notification.routes");
 
+const { initializeApp } = require("firebase-admin/app");
+const { credential, auth } = require("firebase-admin");
+
 app.use(
   cors({
     origin: "*",
@@ -31,6 +34,15 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
+});
+
+initializeApp({
+  credential: credential.cert({
+    projectId: process.env.PROJECT_ID,
+    privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    clientEmail: process.env.CLIENT_EMAIL,
+  }),
+  databaseURL: process.env.DB_URI,
 });
 
 // updating code

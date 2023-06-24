@@ -1,3 +1,4 @@
+const { auth } = require("firebase-admin");
 const User = require("../models/user.Model");
 
 const asyncHandler = require("express-async-handler");
@@ -33,4 +34,39 @@ module.exports.students = asyncHandler(async (req, res) => {
       message: error.message,
     });
   }
+});
+
+module.exports.addUser = asyncHandler(async (req, res) => {
+  let firebaseUser;
+  const email = req.params.email;
+  const { password, name } = req.body;
+  const isExist = await User.findOne({ email: email });
+
+  if (isExist) {
+    res.status(400);
+    throw new Error("User already exist");
+  }
+
+  auth()
+    .createUser({
+      email: email,
+      password,
+      displayName: name,
+    })
+    .then((userRecord) => {
+      // console.log("Successfully created new user:", userRecord.uid);
+    })
+    .catch((error) => {
+      console.error("Error creating new user:", error);
+    });
+
+  const user = await User.create({
+    ...req.body,
+    assignedBy: req.decoded._id,
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: user,
+  });
 });
