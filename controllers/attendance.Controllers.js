@@ -1,4 +1,29 @@
 const Attendance = require("../models/attendance.Model");
+const User = require("../models/user.Model");
+
+const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+setInterval(async () => {
+  const users = await User.find({ role: "user" });
+
+  users.forEach(async (user) => {
+    await Attendance.create({
+      email: user.email,
+      date: new Date().toLocaleDateString(),
+      day: days[new Date().getDay()],
+      attendanceStatus: false,
+      user: user._id,
+    });
+  });
+}, 24 * 60 * 60 * 1000);
 
 module.exports.allAttendanceList = async (req, res) => {
   const result = await Attendance.find().populate("user");
