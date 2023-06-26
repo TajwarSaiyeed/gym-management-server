@@ -22,7 +22,7 @@ module.exports.allUsers = asyncHandler(async (req, res) => {
 
 module.exports.students = asyncHandler(async (req, res) => {
   try {
-    const students = await User.find({ role: "user" });
+    const students = await User.find({ role: "user" }).populate("assignedBy");
 
     res.status(200).json({
       status: "success",
