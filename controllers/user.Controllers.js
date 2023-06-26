@@ -72,7 +72,9 @@ module.exports.addUser = asyncHandler(async (req, res) => {
 });
 
 module.exports.getUser = asyncHandler(async (req, res) => {
-  const user = await User.findOne({ email: req.params.email });
+  const user = await User.findOne({ email: req.params.email }).populate(
+    "assignedBy"
+  );
   if (!user) {
     res.status(404);
     throw new Error("User not found");
