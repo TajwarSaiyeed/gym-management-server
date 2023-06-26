@@ -31,13 +31,12 @@ module.exports.students = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: error.message,
+      message: error?.message,
     });
   }
 });
 
 module.exports.addUser = asyncHandler(async (req, res) => {
-  let firebaseUser;
   const email = req.params.email;
   const { password, name } = req.body;
   const isExist = await User.findOne({ email: email });
@@ -72,16 +71,23 @@ module.exports.addUser = asyncHandler(async (req, res) => {
 });
 
 module.exports.getUser = asyncHandler(async (req, res) => {
-  const user = await User.findOne({ email: req.params.email }).populate(
-    "assignedBy"
-  );
-  if (!user) {
-    res.status(404);
-    throw new Error("User not found");
-  }
+  try {
+    const user = await User.findOne({ email: req.params.email }).populate(
+      "assignedBy"
+    );
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
 
-  res.status(200).json({
-    status: "success",
-    data: user,
-  });
+    res.status(200).json({
+      status: "success",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error?.message,
+    });
+  }
 });

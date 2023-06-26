@@ -4,10 +4,10 @@ const userControllers = require("../controllers/user.Controllers");
 const router = express.Router();
 
 router.route("/").get(userControllers.allUsers);
+router.route("/students").get(userControllers.students);
 router
   .route("/:email")
-  .post(userControllers.addUser)
-  .get(userControllers.getUser);
-router.route("/students").get(userControllers.students);
+  .get(userControllers.getUser)
+  .post(userControllers.addUser);
 
 module.exports = router;
