@@ -70,3 +70,16 @@ module.exports.addUser = asyncHandler(async (req, res) => {
     data: user,
   });
 });
+
+module.exports.getUser = asyncHandler(async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
