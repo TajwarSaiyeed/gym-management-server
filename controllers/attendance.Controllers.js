@@ -12,7 +12,10 @@ const days = [
 ];
 
 setInterval(async () => {
-  const users = await User.find({ role: "user" });
+  // trainer or user
+  const users = await User.find({
+    $or: [{ role: "trainer" }, { role: "user" }],
+  });
 
   users.forEach(async (user) => {
     await Attendance.create({
