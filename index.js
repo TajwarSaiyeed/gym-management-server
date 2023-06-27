@@ -105,13 +105,23 @@ async function run() {
       next();
     };
     // Exercise
-    app.post(
+    app.put(
       "/addexercise",
       verifyJWT,
       verifyAdminOrTrainer,
       async (req, res) => {
         const exercise = req.body;
-        const result = await exercisesCollection.insertOne(exercise);
+        const { date } = req.body;
+        const query = { date: date };
+        const result = await exercisesCollection.updateOne(
+          query,
+          {
+            $set: exercise,
+          },
+          {
+            upsert: true,
+          }
+        );
         res.send(result);
       }
     );
