@@ -9,6 +9,15 @@ module.exports.addNewExercise = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("Please enter exercise name");
     } else {
+      // if exercise name already exists
+
+      const isExist = await ExerciseList.findOne({ exerciseName });
+
+      if (isExist) {
+        res.status(400);
+        throw new Error("Exercise name already exists");
+      }
+
       const exercise = await ExerciseList.create({
         exerciseName,
       });
