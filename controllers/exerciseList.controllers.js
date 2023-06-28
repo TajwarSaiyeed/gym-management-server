@@ -14,8 +14,10 @@ module.exports.addNewExercise = asyncHandler(async (req, res) => {
       const isExist = await ExerciseList.findOne({ exerciseName });
 
       if (isExist) {
-        res.status(400);
-        throw new Error("Exercise name already exists");
+        return res.status(400).json({
+          success: false,
+          message: "Exercise already exists",
+        });
       }
 
       const exercise = await ExerciseList.create({
@@ -27,8 +29,6 @@ module.exports.addNewExercise = asyncHandler(async (req, res) => {
           data: exercise,
         });
       }
-
-      res.status(400);
     }
   } catch (error) {
     res.status(400);
