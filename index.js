@@ -14,9 +14,11 @@ const messageRoutes = require("./routes/message.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
 const feesRoutes = require("./routes/fees.routes");
 const notificationRoutes = require("./routes/notification.routes");
+const exerciseListRoutes = require("./routes/exerciseList.routes");
 
 const { initializeApp } = require("firebase-admin/app");
 const { credential, auth } = require("firebase-admin");
+const { verifyAdminOrTrainer } = require("./middleware/verifyAdminOrTrainer");
 
 app.use(
   cors({
@@ -52,6 +54,12 @@ app.use("/api/message", verifyJWT, messageRoutes);
 app.use("/api/attendance", verifyJWT, attendanceRoutes);
 app.use("/api/fees", verifyJWT, feesRoutes);
 app.use("/api/notification", verifyJWT, notificationRoutes);
+app.use(
+  "/api/exerciselist",
+  verifyJWT,
+  verifyAdminOrTrainer,
+  exerciseListRoutes
+);
 
 async function run() {
   try {
