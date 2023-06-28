@@ -126,6 +126,32 @@ async function run() {
       }
     );
 
+    // get exercise by date
+    app.get("/getexercisebydate", verifyJWT, async (req, res) => {
+      try {
+        const { date, email } = req.query;
+        const query = { date: date, email: email };
+        const result = await exercisesCollection.findOne(query);
+        res.send(result);
+      } catch (error) {
+        res.send(error);
+      }
+    });
+
+    // delete exercise by id
+    app.delete("/deleteexercisebyid", verifyJWT, async (req, res) => {
+      try {
+        const { id } = req.query;
+
+        const query = { _id: new ObjectId(id) };
+        const result = await exercisesCollection.deleteOne(query);
+
+        res.send(result);
+      } catch (error) {
+        res.send(error);
+      }
+    });
+
     // get exercise by email
     app.get("/getexercisebyuser", verifyJWT, async (req, res) => {
       const email = req.query.email;
