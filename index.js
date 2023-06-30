@@ -15,9 +15,10 @@ const attendanceRoutes = require("./routes/attendance.routes");
 const feesRoutes = require("./routes/fees.routes");
 const notificationRoutes = require("./routes/notification.routes");
 const exerciseListRoutes = require("./routes/exerciseList.routes");
+const dietFoodListRoutes = require("./routes/dietFoodList.routes");
 
 const { initializeApp } = require("firebase-admin/app");
-const { credential, auth } = require("firebase-admin");
+const { credential } = require("firebase-admin");
 const { verifyAdminOrTrainer } = require("./middleware/verifyAdminOrTrainer");
 
 app.use(
@@ -59,6 +60,12 @@ app.use(
   verifyJWT,
   verifyAdminOrTrainer,
   exerciseListRoutes
+);
+app.use(
+  "/api/dietFoodList",
+  verifyJWT,
+  verifyAdminOrTrainer,
+  dietFoodListRoutes
 );
 
 async function run() {
