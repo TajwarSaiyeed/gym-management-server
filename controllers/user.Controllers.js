@@ -46,6 +46,8 @@ module.exports.addUser = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
 
+  const admin = await User.findOne({ role: "admin" });
+
   auth()
     .createUser({
       email: email,
@@ -62,6 +64,7 @@ module.exports.addUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     ...req.body,
     assignedBy: req.decoded._id,
+    admin: admin._id,
   });
 
   res.status(201).json({
