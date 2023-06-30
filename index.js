@@ -62,7 +62,7 @@ app.use(
   exerciseListRoutes
 );
 app.use(
-  "/api/dietFoodList",
+  "/api/dietfoodlist",
   verifyJWT,
   verifyAdminOrTrainer,
   dietFoodListRoutes
