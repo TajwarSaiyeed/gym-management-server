@@ -16,6 +16,7 @@ const feesRoutes = require("./routes/fees.routes");
 const notificationRoutes = require("./routes/notification.routes");
 const exerciseListRoutes = require("./routes/exerciseList.routes");
 const dietFoodListRoutes = require("./routes/dietFoodList.routes");
+const dietRoutes = require("./routes/diet.routes");
 
 const { initializeApp } = require("firebase-admin/app");
 const { credential } = require("firebase-admin");
@@ -67,6 +68,7 @@ app.use(
   verifyAdminOrTrainer,
   dietFoodListRoutes
 );
+app.use("/api/diet", verifyJWT, dietRoutes);
 
 async function run() {
   try {
