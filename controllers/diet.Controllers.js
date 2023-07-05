@@ -29,6 +29,24 @@ module.exports.addDiet = asyncHandler(async (req, res) => {
   }
 });
 
+module.exports.getDietDataByDate = asyncHandler(async (req, res) => {
+  try {
+    const { date, email } = req.query;
+    const query = { date: date, email: email };
+    const result = await Diet.findOne(query).populate("assignedBy", "name");
+
+    res.status(200).json({
+      status: "success",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      data: error,
+    });
+  }
+});
+
 module.exports.getDietDataByEmail = asyncHandler(async (req, res) => {
   try {
     const { email } = req.query;

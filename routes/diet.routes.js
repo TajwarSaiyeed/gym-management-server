@@ -9,6 +9,10 @@ router
   .put(verifyAdminOrTrainer, dietController.addDiet);
 
 router
+  .route("/:email/:date")
+  .delete(verifyAdminOrTrainer, dietController.getDietDataByDate);
+
+router
   .route("/:id")
   .delete(verifyAdminOrTrainer, dietController.deleteDietById);
 

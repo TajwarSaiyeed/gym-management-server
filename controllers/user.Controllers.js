@@ -94,3 +94,34 @@ module.exports.getUser = asyncHandler(async (req, res) => {
     });
   }
 });
+
+module.exports.updateUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    if (!user) {
+      res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email: req.params.email },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: updatedUser,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err?.message,
+    });
+  }
+});
