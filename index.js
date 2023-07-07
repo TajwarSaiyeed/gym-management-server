@@ -595,7 +595,11 @@ const server = app.listen(port, () => {
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://gym-management-apps.web.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://gym-management-apps.web.app",
+      "https://machamp.tk",
+    ],
     methods: ["GET", "POST"],
     pingTimeout: 60000,
   },
