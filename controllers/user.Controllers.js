@@ -13,9 +13,12 @@ module.exports.allUsers = asyncHandler(async (req, res) => {
         ],
       }
     : {};
-  const users = await User.find(keyword).find({
-    email: { $ne: req.decoded.email },
-  });
+  const users = await User.find(keyword)
+    .find({
+      email: { $ne: req.decoded.email },
+    })
+    .populate("assignedBy")
+    .populate("admin");
 
   res.json(users);
 });
