@@ -27,7 +27,19 @@ app.use(
     origin: "*",
   })
 );
-app.use(express.json());
+
+app.use(
+  express.urlencoded({
+    extended: true,
+    parameterLimit: 11000000,
+    limit: "10mb",
+  })
+);
+app.use(
+  express.json({
+    limit: "10mb",
+  })
+);
 
 // updated code
 connectDB();
