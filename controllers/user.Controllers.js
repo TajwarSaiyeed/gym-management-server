@@ -73,6 +73,29 @@ module.exports.addUser = asyncHandler(async (req, res) => {
   });
 });
 
+// signup user
+module.exports.signupUser = asyncHandler(async (req, res) => {
+  const email = req.params.email;
+  const isExist = await User.findOne({ email: email });
+
+  if (isExist) {
+    res.status(400);
+    throw new Error("User already exist");
+  }
+
+  const admin = await User.findOne({ role: "admin" });
+
+  const user = await User.create({
+    ...req.body,
+    admin: admin._id,
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: user,
+  });
+});
+
 module.exports.getUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email })

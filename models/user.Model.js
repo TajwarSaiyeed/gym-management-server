@@ -31,12 +31,15 @@ const userSchema = mongoose.Schema(
     },
     age: {
       type: Number,
+      default: 0,
     },
     height: {
       type: Number,
+      default: 0,
     },
     weight: {
       type: Number,
+      default: 0,
     },
     goal: {
       type: String,
@@ -47,10 +50,12 @@ const userSchema = mongoose.Schema(
         "gain more flexible",
         "learn the basics",
       ],
+      default: "learn the basics",
     },
     level: {
       type: String,
       enum: ["rookie", "beginner", "intermediate", "advanced", "true beast"],
+      default: "rookie",
     },
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +64,11 @@ const userSchema = mongoose.Schema(
     admin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+    approved: {
+      type: Boolean,
+      enum: [true, false],
+      default: false,
     },
   },
   {

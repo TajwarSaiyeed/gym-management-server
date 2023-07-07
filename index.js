@@ -50,7 +50,7 @@ initializeApp({
 });
 
 // updating code
-app.use("/api/user", verifyJWT, userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/chat", verifyJWT, chatRoutes);
 app.use("/api/message", verifyJWT, messageRoutes);
 app.use("/api/attendance", verifyJWT, attendanceRoutes);
