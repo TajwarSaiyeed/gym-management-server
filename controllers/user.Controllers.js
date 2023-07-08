@@ -3,7 +3,7 @@ const User = require("../models/user.Model");
 
 const asyncHandler = require("express-async-handler");
 // /api/user?search=trainer
-
+// getAllUser for messages section without the logged in user
 module.exports.allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
@@ -20,6 +20,11 @@ module.exports.allUsers = asyncHandler(async (req, res) => {
     .populate("assignedBy")
     .populate("admin");
 
+  res.json(users);
+});
+
+module.exports.AllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({}).populate("assignedBy").populate("admin");
   res.json(users);
 });
 

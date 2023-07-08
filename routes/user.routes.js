@@ -5,6 +5,7 @@ const verifyJWT = require("../middleware/verifyJWT");
 const router = express.Router();
 
 router.route("/").get(verifyJWT, userControllers.allUsers);
+router.route("/allUsers").get(verifyJWT, userControllers.AllUsers);
 router.route("/students").get(verifyJWT, userControllers.students);
 router
   .route("/:email")
