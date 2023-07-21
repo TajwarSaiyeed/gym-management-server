@@ -1,34 +1,39 @@
 const Attendance = require("../models/attendance.Model");
 const User = require("../models/user.Model");
+const schedule = require("node-schedule");
 
-// const days = [
-//   "Sunday",
-//   "Monday",
-//   "Tuesday",
-//   "Wednesday",
-//   "Thursday",
-//   "Friday",
-//   "Saturday",
-// ];
+const startOfDayRule = new schedule.RecurrenceRule();
+startOfDayRule.hour = 0;
+startOfDayRule.minute = 0;
+startOfDayRule.second = 0;
 
-// setInterval(async () => {
-//   // trainer or user
-//   const users = await User.find({
-//     $or: [{ role: "trainer" }, { role: "user" }],
-//   });
+schedule.scheduleJob(startOfDayRule, async () => {
+  const date = new Date().toISOString().slice(0, 10);
+  try {
+    const users = await User.find({
+      role: "user",
+    });
 
-//   users.forEach(async (user) => {
-//     await Attendance.create({
-//       email: user.email,
-//       date: new Date().toLocaleDateString(),
-//       day: days[new Date().getDay()],
-//       attendanceStatus: false,
-//       user: user._id,
-//     });
-//   });
-// }, 24 * 60 * 60 * 1000);
+    users.forEach(async (user) => {
+      await Attendance.create({
+        email: user.email,
+        user: user._id,
+        date: date,
+        isPresent: false,
+      });
+    });
 
-module.exports.allAttendanceList = async (req, res) => {
+    console.log("Attendance created");
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: err,
+    });
+  }
+});
+
+const allAttendanceList = async (req, res) => {
   const result = await Attendance.find().populate("user");
 
   return res.status(200).json({
@@ -39,7 +44,7 @@ module.exports.allAttendanceList = async (req, res) => {
 };
 
 // get attendance by email
-module.exports.getAttendanceByEmail = async (req, res) => {
+const getAttendanceByEmail = async (req, res) => {
   const email = req.params.email;
   const filter = { email: email };
 
@@ -52,47 +57,16 @@ module.exports.getAttendanceByEmail = async (req, res) => {
   });
 };
 
-// update or create attendance
-module.exports.updateAttendance = async (req, res) => {
+const present = async (req, res) => {
   const email = req.params.email;
-  const date = req.query.date;
-  const { day, attendanceStatus } = req.body;
-  const filter = { email: email, date: date };
-
-  // find the document first
-  const isExist = await Attendance.findOne(filter);
-
-  // if document exists, update it
-
-  if (isExist) {
-    return;
-  }
-
-  // if document does not exist, create it
-
-  const result = await Attendance.create({
-    email,
-    date,
-    day,
-    attendanceStatus,
-    user: req.decoded._id,
-  });
-
-  return res
-    .status(201)
-    .json({ status: "success", message: "Attendance created", data: result });
-};
-
-module.exports.present = async (req, res) => {
-  const email = req.params.email;
-  const date = req.query.date;
+  const date = new Date().toISOString().slice(0, 10);
   const { attendanceStatus } = req.body;
   const filter = { email: email, date: date };
 
   const result = await Attendance.findOneAndUpdate(
     filter,
     {
-      attendanceStatus: attendanceStatus,
+      isPresent: attendanceStatus,
     },
     { upsert: true }
   );
@@ -100,4 +74,10 @@ module.exports.present = async (req, res) => {
   return res
     .status(201)
     .json({ status: "success", message: "Attendance updated", data: result });
+};
+
+module.exports = {
+  allAttendanceList,
+  getAttendanceByEmail,
+  present,
 };

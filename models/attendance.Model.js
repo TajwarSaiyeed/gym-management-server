@@ -10,13 +10,10 @@ const attendanceModel = mongoose.Schema(
       type: String,
       required: true,
     },
-    day: {
-      type: String,
-      required: true,
-    },
-    attendanceStatus: {
+    isPresent: {
       type: Boolean,
       required: true,
+      default: false,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
