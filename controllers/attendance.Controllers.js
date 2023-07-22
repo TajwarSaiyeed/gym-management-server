@@ -5,7 +5,7 @@ const moment = require("moment");
 
 const startOfDayRule = new schedule.RecurrenceRule();
 startOfDayRule.hour = 8;
-startOfDayRule.minute = 0;
+startOfDayRule.minute = 5;
 startOfDayRule.second = 0;
 
 schedule.scheduleJob(startOfDayRule, async () => {
