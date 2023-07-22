@@ -15,6 +15,7 @@ const attendanceRoutes = require("./routes/attendance.routes");
 const feesRoutes = require("./routes/fees.routes");
 const notificationRoutes = require("./routes/notification.routes");
 const exerciseListRoutes = require("./routes/exerciseList.routes");
+const exerciseRoutes = require("./routes/exercise.routes");
 const dietFoodListRoutes = require("./routes/dietFoodList.routes");
 const dietRoutes = require("./routes/diet.routes");
 
@@ -74,6 +75,7 @@ app.use(
   verifyAdminOrTrainer,
   exerciseListRoutes
 );
+app.use("/api/exercise", verifyJWT, exerciseRoutes);
 app.use(
   "/api/dietfoodlist",
   verifyJWT,
@@ -133,61 +135,61 @@ async function run() {
       }
       next();
     };
-    // Exercise
-    app.put(
-      "/addexercise",
-      verifyJWT,
-      verifyAdminOrTrainer,
-      async (req, res) => {
-        const exercise = req.body;
-        const { date } = req.body;
-        const query = { date: date };
-        const result = await exercisesCollection.updateOne(
-          query,
-          {
-            $set: exercise,
-          },
-          {
-            upsert: true,
-          }
-        );
-        res.send(result);
-      }
-    );
+    // // Exercise
+    // app.put(
+    //   "/addexercise",
+    //   verifyJWT,
+    //   verifyAdminOrTrainer,
+    //   async (req, res) => {
+    //     const exercise = req.body;
+    //     const { date } = req.body;
+    //     const query = { date: date };
+    //     const result = await exercisesCollection.updateOne(
+    //       query,
+    //       {
+    //         $set: exercise,
+    //       },
+    //       {
+    //         upsert: true,
+    //       }
+    //     );
+    //     res.send(result);
+    //   }
+    // );
 
-    // get exercise by date
-    app.get("/getexercisebydate", verifyJWT, async (req, res) => {
-      try {
-        const { date, email } = req.query;
-        const query = { date: date, email: email };
-        const result = await exercisesCollection.findOne(query);
-        res.send(result);
-      } catch (error) {
-        res.send(error);
-      }
-    });
+    // // get exercise by date
+    // app.get("/getexercisebydate", verifyJWT, async (req, res) => {
+    //   try {
+    //     const { date, email } = req.query;
+    //     const query = { date: date, email: email };
+    //     const result = await exercisesCollection.findOne(query);
+    //     res.send(result);
+    //   } catch (error) {
+    //     res.send(error);
+    //   }
+    // });
 
-    // delete exercise by id
-    app.delete("/deleteexercisebyid", verifyJWT, async (req, res) => {
-      try {
-        const { id } = req.query;
+    // // delete exercise by id
+    // app.delete("/deleteexercisebyid", verifyJWT, async (req, res) => {
+    //   try {
+    //     const { id } = req.query;
 
-        const query = { _id: new ObjectId(id) };
-        const result = await exercisesCollection.deleteOne(query);
+    //     const query = { _id: new ObjectId(id) };
+    //     const result = await exercisesCollection.deleteOne(query);
 
-        res.send(result);
-      } catch (error) {
-        res.send(error);
-      }
-    });
+    //     res.send(result);
+    //   } catch (error) {
+    //     res.send(error);
+    //   }
+    // });
 
-    // get exercise by email
-    app.get("/getexercisebyuser", verifyJWT, async (req, res) => {
-      const email = req.query.email;
-      const query = { email: email };
-      const result = await exercisesCollection.find(query).toArray();
-      res.send(result);
-    });
+    // // get exercise by email
+    // app.get("/getexercisebyuser", verifyJWT, async (req, res) => {
+    //   const email = req.query.email;
+    //   const query = { email: email };
+    //   const result = await exercisesCollection.find(query).toArray();
+    //   res.send(result);
+    // });
 
     // NOTIFICATION
     app.patch("/notification", verifyJWT, async (req, res) => {
