@@ -3,8 +3,8 @@ const User = require("../models/user.Model");
 const schedule = require("node-schedule");
 
 const startOfDayRule = new schedule.RecurrenceRule();
-startOfDayRule.hour = 7;
-startOfDayRule.minute = 30;
+startOfDayRule.hour = 0o7;
+startOfDayRule.minute = 40;
 startOfDayRule.second = 0;
 
 console.log(startOfDayRule);
