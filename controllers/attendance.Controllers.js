@@ -12,6 +12,10 @@ console.log(startOfDayRule);
 
 console.log(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
 
+setInterval(() => {
+  console.log(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
+}, 1000 * 60);
+
 schedule.scheduleJob(startOfDayRule, async () => {
   const date = moment().utc().format("YYYY-MM-DD");
 
