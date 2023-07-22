@@ -3,9 +3,11 @@ const User = require("../models/user.Model");
 const schedule = require("node-schedule");
 
 const startOfDayRule = new schedule.RecurrenceRule();
-startOfDayRule.hour = 0;
-startOfDayRule.minute = 0;
+startOfDayRule.hour = 7;
+startOfDayRule.minute = 30;
 startOfDayRule.second = 0;
+
+console.log(startOfDayRule);
 
 schedule.scheduleJob(startOfDayRule, async () => {
   const date = new Date().toISOString().slice(0, 10);
@@ -13,6 +15,8 @@ schedule.scheduleJob(startOfDayRule, async () => {
     const users = await User.find({
       role: "user",
     });
+
+    console.log("hit");
 
     users.forEach(async (user) => {
       await Attendance.create({
