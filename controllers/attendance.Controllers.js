@@ -4,7 +4,7 @@ const schedule = require("node-schedule");
 const moment = require("moment");
 
 const startOfDayRule = new schedule.RecurrenceRule();
-startOfDayRule.hour = 0;
+startOfDayRule.hour = 8;
 startOfDayRule.minute = 0;
 startOfDayRule.second = 0;
 
