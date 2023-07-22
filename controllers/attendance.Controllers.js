@@ -4,29 +4,19 @@ const schedule = require("node-schedule");
 const moment = require("moment");
 
 const startOfDayRule = new schedule.RecurrenceRule();
-startOfDayRule.hour = 2;
-startOfDayRule.minute = 40;
+startOfDayRule.hour = 0;
+startOfDayRule.minute = 0;
 startOfDayRule.second = 0;
-
-console.log(startOfDayRule);
-
-console.log("before interval", moment().utc().format("YYYY-MM-DD HH:mm:ss"));
-
-setInterval(() => {
-  console.log("inside interval", moment().utc().format("YYYY-MM-DD HH:mm:ss"));
-}, 1000 * 60);
 
 schedule.scheduleJob(startOfDayRule, async () => {
   const date = moment().utc().format("YYYY-MM-DD");
 
-  console.log("inside schedule job", date);
+  console.log("Date", date);
 
   try {
     const users = await User.find({
       role: "user",
     });
-
-    console.log("hit");
 
     users.forEach(async (user) => {
       await Attendance.create({
