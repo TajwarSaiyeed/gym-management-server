@@ -10,16 +10,16 @@ startOfDayRule.second = 0;
 
 console.log(startOfDayRule);
 
-console.log(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
+console.log("before interval", moment().utc().format("YYYY-MM-DD HH:mm:ss"));
 
 setInterval(() => {
-  console.log(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
+  console.log("inside interval", moment().utc().format("YYYY-MM-DD HH:mm:ss"));
 }, 1000 * 60);
 
 schedule.scheduleJob(startOfDayRule, async () => {
   const date = moment().utc().format("YYYY-MM-DD");
 
-  console.log(date);
+  console.log("inside schedule job", date);
 
   try {
     const users = await User.find({
