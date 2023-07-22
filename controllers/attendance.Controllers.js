@@ -5,8 +5,12 @@ const moment = require("moment");
 
 const startOfDayRule = new schedule.RecurrenceRule();
 startOfDayRule.hour = 8;
-startOfDayRule.minute = 5;
+startOfDayRule.minute = 15;
 startOfDayRule.second = 0;
+
+console.log(startOfDayRule);
+
+console.log(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
 
 schedule.scheduleJob(startOfDayRule, async () => {
   const date = moment().utc().format("YYYY-MM-DD");
