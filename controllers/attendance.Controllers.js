@@ -5,7 +5,7 @@ const moment = require("moment");
 
 const startOfDayRule = new schedule.RecurrenceRule();
 startOfDayRule.hour = 8;
-startOfDayRule.minute = 15;
+startOfDayRule.minute = 30;
 startOfDayRule.second = 0;
 
 console.log(startOfDayRule);
