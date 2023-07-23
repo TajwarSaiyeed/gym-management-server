@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Exercise = require("../models/exercise.Model");
+const Notification = require("../models/notification.Model");
 
 const addExercise = asyncHandler(async (req, res) => {
   const { workOut, users } = req.body;
@@ -12,6 +13,16 @@ const addExercise = asyncHandler(async (req, res) => {
     } else {
       await Exercise.create({ email: user, workOut });
     }
+  });
+
+  users.forEach(async (user) => {
+    await Notification.create({
+      email: user,
+      notificationType: "exercise",
+      notificationText: "New exercise added",
+      isRead: false,
+      pathName: "/home/user-exercise",
+    });
   });
 
   res.status(201).json({
