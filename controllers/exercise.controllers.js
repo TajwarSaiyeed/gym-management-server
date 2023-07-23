@@ -23,6 +23,7 @@ const addExercise = asyncHandler(async (req, res) => {
 const getExerciseDataByEmail = asyncHandler(async (req, res) => {
   const { email } = req.query;
   const exercise = await Exercise.findOne({ email });
+
   if (exercise) {
     res.status(200).json({
       status: "success",

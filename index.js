@@ -8,6 +8,9 @@ const jwt = require("jsonwebtoken");
 const verifyJWT = require("./middleware/verifyJWT");
 const connectDB = require("./config/db");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
+const { notFound, errorHandler } = require("./middleware/error.middleware");
+
 const userRoutes = require("./routes/user.routes");
 const chatRoutes = require("./routes/chat.routes");
 const messageRoutes = require("./routes/message.routes");
@@ -590,6 +593,10 @@ run().catch((err) => console.log(err));
 app.get("/", (req, res) => {
   res.send("server is running");
 });
+
+// middlewares error handlers (not found, error)
+app.use(notFound);
+app.use(errorHandler);
 
 const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

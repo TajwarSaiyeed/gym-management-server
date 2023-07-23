@@ -1,19 +1,17 @@
 const Attendance = require("../models/attendance.Model");
 const User = require("../models/user.Model");
-const schedule = require("node-schedule");
 const moment = require("moment");
 
-const startOfDayRule = new schedule.RecurrenceRule();
-startOfDayRule.hour = 0;
-startOfDayRule.minute = 0;
-startOfDayRule.second = 0;
-
-schedule.scheduleJob(startOfDayRule, async () => {
+setInterval(async () => {
   const date = moment().utc().format("YYYY-MM-DD");
+  // get moment hour
+  const hour = moment().utc().format("HH");
+  // get moment minute
+  const minute = moment().utc().format("mm");
+  // get moment second
+  const second = moment().utc().format("ss");
 
-  console.log("Date", date);
-
-  try {
+  if (hour === "00" && minute === "00" && second === "00") {
     const users = await User.find({
       role: "user",
     });
@@ -28,14 +26,9 @@ schedule.scheduleJob(startOfDayRule, async () => {
     });
 
     console.log("Attendance created");
-  } catch (err) {
-    return res.status(500).json({
-      status: "error",
-      message: "Internal server error",
-      data: err,
-    });
   }
-});
+}, 1000);
+
 const allAttendanceList = async (req, res) => {
   const result = await Attendance.find().populate("user");
 
