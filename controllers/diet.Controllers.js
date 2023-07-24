@@ -10,7 +10,7 @@ const addDiet = asyncHandler(async (req, res) => {
       diet.period = period;
       await diet.save();
     } else {
-      await Diet.create({ email: user, workOut });
+      await Diet.create({ email: user, period });
     }
   });
 
