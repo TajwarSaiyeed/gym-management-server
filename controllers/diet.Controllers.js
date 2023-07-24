@@ -1,11 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const Diet = require("../models/diet.Model");
+const Notification = require("../models/notification.Model");
 
 const addDiet = asyncHandler(async (req, res) => {
   const { period, users } = req.body;
 
   users.forEach(async (user) => {
     const diet = await Diet.findOne({ email: user });
+
     if (diet) {
       diet.period = period;
       await diet.save();
