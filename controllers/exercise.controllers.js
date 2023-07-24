@@ -21,7 +21,7 @@ const addExercise = asyncHandler(async (req, res) => {
       notificationType: "exercise",
       notificationText: "New exercise added",
       isRead: false,
-      pathName: "/home/user-exercise",
+      pathName: "/home/user-exercises",
     });
   });
 
