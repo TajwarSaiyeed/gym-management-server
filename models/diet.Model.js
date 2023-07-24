@@ -5,7 +5,7 @@ const dietSchema = mongoose.Schema(
     email: { type: String, required: true },
     period: [
       {
-        id: { type: String, required: true },
+        _id: { type: String, required: true },
         foodName: { type: String, required: true },
         BF: { type: Boolean, required: true },
         MM: { type: Boolean, required: true },

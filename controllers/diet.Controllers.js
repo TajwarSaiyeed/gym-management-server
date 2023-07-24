@@ -6,24 +6,32 @@ const addDiet = asyncHandler(async (req, res) => {
   const { period, users } = req.body;
 
   users.forEach(async (user) => {
-    const diet = await Diet.findOne({ email: user });
+    try {
+      const diet = await Diet.findOne({ email: user });
 
-    if (diet) {
-      diet.period = period;
-      await diet.save();
-    } else {
-      await Diet.create({ email: user, period });
+      if (diet) {
+        diet.period = period;
+        await diet.save();
+      } else {
+        await Diet.create({ email: user, period });
+      }
+    } catch (error) {
+      console.log("error", error);
     }
   });
 
   users.forEach(async (user) => {
-    await Notification.create({
-      email: user,
-      notificationType: "diet",
-      notificationText: "New diet added",
-      isRead: false,
-      pathName: "/home/diet",
-    });
+    try {
+      await Notification.create({
+        email: user,
+        notificationType: "diet",
+        notificationText: "New diet added",
+        isRead: false,
+        pathName: "/home/diet",
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
   });
 
   res.status(201).json({
