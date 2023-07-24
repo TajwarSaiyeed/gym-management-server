@@ -30,7 +30,20 @@ const addDiet = asyncHandler(async (req, res) => {
   });
 });
 
-const getDietDataByEmail = asyncHandler(async (req, res) => {});
+const getDietDataByEmail = asyncHandler(async (req, res) => {
+  const { email } = req.query;
+  const diet = await Diet.findOne({ email });
+
+  if (diet) {
+    res.status(200).json({
+      status: "success",
+      data: diet,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Diet not found");
+  }
+});
 
 module.exports = {
   addDiet,
