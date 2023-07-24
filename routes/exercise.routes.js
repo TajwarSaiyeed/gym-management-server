@@ -8,8 +8,4 @@ router
   .get(exerciseController.getExerciseDataByEmail)
   .put(verifyAdminOrTrainer, exerciseController.addExercise);
 
-// router
-//   .route("/:id")
-//   .delete(verifyAdminOrTrainer, exerciseController.deleteDietById);
-
 module.exports = router;

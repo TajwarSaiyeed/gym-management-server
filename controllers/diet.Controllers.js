@@ -1,83 +1,38 @@
 const asyncHandler = require("express-async-handler");
 const Diet = require("../models/diet.Model");
 
-module.exports.addDiet = asyncHandler(async (req, res) => {
-  try {
-    const dietData = {
-      ...req.body,
-      assignedBy: req.decoded._id,
-    };
-    const query = { date: dietData.date, email: dietData.email };
-    const result = await Diet.updateOne(
-      query,
-      {
-        $set: dietData,
-      },
-      {
-        upsert: true,
-      }
-    );
-    res.status(200).json({
-      status: "success",
-      data: result,
+const addDiet = asyncHandler(async (req, res) => {
+  const { period, users } = req.body;
+
+  users.forEach(async (user) => {
+    const diet = await Diet.findOne({ email: user });
+    if (diet) {
+      diet.period = period;
+      await diet.save();
+    } else {
+      await Diet.create({ email: user, workOut });
+    }
+  });
+
+  users.forEach(async (user) => {
+    await Notification.create({
+      email: user,
+      notificationType: "diet",
+      notificationText: "New diet added",
+      isRead: false,
+      pathName: "/home/diet",
     });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      data: error,
-    });
-  }
+  });
+
+  res.status(201).json({
+    status: "success",
+    message: "Diet added successfully",
+  });
 });
 
-module.exports.getDietDataByDate = asyncHandler(async (req, res) => {
-  try {
-    const { date, email } = req.query;
-    const query = { date: date, email: email };
-    const result = await Diet.findOne(query).populate("assignedBy", "name");
+const getDietDataByEmail = asyncHandler(async (req, res) => {});
 
-    res.status(200).json({
-      status: "success",
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      data: error,
-    });
-  }
-});
-
-module.exports.getDietDataByEmail = asyncHandler(async (req, res) => {
-  try {
-    const { email } = req.query;
-    const query = { email: email };
-    const result = await Diet.find(query).populate("assignedBy", "name");
-
-    res.status(200).json({
-      status: "success",
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      data: error,
-    });
-  }
-});
-
-module.exports.deleteDietById = asyncHandler(async (req, res) => {
-  try {
-    const { id } = req.params;
-    const query = { _id: id };
-    const result = await Diet.deleteOne(query);
-    res.status(200).json({
-      status: "success",
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      data: error,
-    });
-  }
-});
+module.exports = {
+  addDiet,
+  getDietDataByEmail,
+};
