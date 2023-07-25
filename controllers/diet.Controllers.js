@@ -27,7 +27,7 @@ const addDiet = asyncHandler(async (req, res) => {
         notificationType: "diet",
         notificationText: "New diet added",
         isRead: false,
-        pathName: "/home/diet",
+        pathName: "/home/user-diet",
       });
     } catch (error) {
       console.log("error", error);
