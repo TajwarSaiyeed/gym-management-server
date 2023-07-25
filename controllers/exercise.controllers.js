@@ -3,7 +3,7 @@ const Exercise = require("../models/exercise.Model");
 const Notification = require("../models/notification.Model");
 
 const addExercise = asyncHandler(async (req, res) => {
-  const { workOut, users } = req.body;
+  const { workOut, users, from, to } = req.body;
 
   users.forEach(async (user) => {
     const exercise = await Exercise.findOne({ email: user });
@@ -11,7 +11,7 @@ const addExercise = asyncHandler(async (req, res) => {
       exercise.workOut = workOut;
       await exercise.save();
     } else {
-      await Exercise.create({ email: user, workOut });
+      await Exercise.create({ email: user, workOut, from, to });
     }
   });
 
