@@ -59,6 +59,13 @@ const present = async (req, res) => {
   const { attendanceStatus } = req.body;
   const filter = { email: email, date: date };
 
+  const isExistattendance = await Attendance.findOne(filter);
+
+  if (!isExistattendance) {
+    res.status(404);
+    throw new Error("Attendance not found");
+  }
+
   const result = await Attendance.findOneAndUpdate(
     filter,
     {
