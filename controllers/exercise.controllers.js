@@ -9,6 +9,8 @@ const addExercise = asyncHandler(async (req, res) => {
     const exercise = await Exercise.findOne({ email: user });
     if (exercise) {
       exercise.workOut = workOut;
+      exercise.from = from;
+      exercise.to = to;
       await exercise.save();
     } else {
       await Exercise.create({ email: user, workOut, from, to });

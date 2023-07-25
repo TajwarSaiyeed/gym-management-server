@@ -11,6 +11,8 @@ const addDiet = asyncHandler(async (req, res) => {
 
       if (diet) {
         diet.period = period;
+        diet.from = from;
+        diet.to = to;
         await diet.save();
       } else {
         await Diet.create({ email: user, period, from, to });
