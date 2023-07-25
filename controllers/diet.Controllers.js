@@ -3,7 +3,7 @@ const Diet = require("../models/diet.Model");
 const Notification = require("../models/notification.Model");
 
 const addDiet = asyncHandler(async (req, res) => {
-  const { period, users } = req.body;
+  const { period, users, from, to } = req.body;
 
   users.forEach(async (user) => {
     try {
@@ -13,7 +13,7 @@ const addDiet = asyncHandler(async (req, res) => {
         diet.period = period;
         await diet.save();
       } else {
-        await Diet.create({ email: user, period });
+        await Diet.create({ email: user, period, from, to });
       }
     } catch (error) {
       console.log("error", error);

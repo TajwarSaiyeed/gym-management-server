@@ -14,6 +14,8 @@ const dietSchema = mongoose.Schema(
         D: { type: Boolean, required: true },
       },
     ],
+    from: { type: String, required: true },
+    to: { type: String, required: true },
   },
   {
     timestamps: true,
