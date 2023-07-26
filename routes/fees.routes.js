@@ -20,6 +20,6 @@ router.route("/student").get(feesController.getAllFeesByStudent);
 router
   .route("/student/:id")
   .get(feesController.getOneFee)
-  .patch(feesController.paidFee);
+  .patch(feesController.updateFeeStatus);
 
 module.exports = router;

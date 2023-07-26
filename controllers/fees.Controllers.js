@@ -103,9 +103,9 @@ module.exports.getOneFee = asyncHandler(async (req, res) => {
 
 // paid the fee by student
 
-module.exports.paidFee = asyncHandler(async (req, res) => {
+module.exports.updateFeeStatus = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { transactionId, paymentDate } = req.body;
+  const { status } = req.body;
 
   try {
     const fee = await Fees.findById(id);
@@ -117,15 +117,8 @@ module.exports.paidFee = asyncHandler(async (req, res) => {
       });
     }
 
-    if (fee.isPaid) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Fee already paid",
-      });
-    }
-
     const filter = { _id: id };
-    const update = { isPaid: true, transactionId, paymentDate };
+    const update = { status: status };
 
     const updatedFee = await Fees.findOneAndUpdate(filter, update, {
       new: true,

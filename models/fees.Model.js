@@ -40,17 +40,10 @@ const feesSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    isPaid: {
-      type: Boolean,
-      default: false,
-    },
-    transactionId: {
+    status: {
       type: String,
-      default: null,
-    },
-    paymentDate: {
-      type: Date,
-      default: null,
+      enum: ["Pending", "Paid"],
+      default: "Pending",
     },
   },
   {
