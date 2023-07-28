@@ -1,6 +1,8 @@
+const mongoose = require("mongoose");
+const moment = require("moment");
+
 const Attendance = require("../models/attendance.Model");
 const User = require("../models/user.Model");
-const moment = require("moment");
 
 setInterval(async () => {
   const date = moment().utc().format("YYYY-MM-DD");
@@ -30,12 +32,33 @@ setInterval(async () => {
 }, 1000);
 
 const allAttendanceList = async (req, res) => {
-  const result = await Attendance.find().populate("user");
+  const gymId = req.query.gymId;
+
+  const user = await User.findOne({ email: req.decoded.email });
+
+  if (user.role === "admin" && user.superAdmin) {
+    const result = await Attendance.find({}).populate("user");
+
+    return res.status(200).json({
+      status: "success",
+      message: "Attendance list",
+      data: result,
+    });
+  }
+
+  let myGymUsersAttendance = [];
+  const result = await Attendance.find({}).populate("user");
+
+  result.forEach((user) => {
+    if (user?.user?.gymId == gymId) {
+      myGymUsersAttendance.push(user);
+    }
+  });
 
   return res.status(200).json({
     status: "success",
     message: "Attendance list",
-    data: result,
+    data: myGymUsersAttendance,
   });
 };
 

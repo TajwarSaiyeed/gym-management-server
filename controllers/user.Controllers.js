@@ -5,6 +5,27 @@ const asyncHandler = require("express-async-handler");
 // /api/user?search=trainer
 // getAllUser for messages section without the logged in user
 module.exports.allUsers = asyncHandler(async (req, res) => {
+  const gymId = req.query.gymId;
+
+  const user = await User.findOne({ email: req.decoded.email });
+
+  if (user.role === "admin" && user.superAdmin) {
+    const keyword = req.query.search
+      ? {
+          $or: [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } },
+          ],
+        }
+      : {};
+    const users = await User.find(keyword)
+      .find({ email: { $ne: req.decoded.email } })
+      .populate("assignedBy")
+      .populate("admin");
+
+    return res.json(users);
+  }
+
   const keyword = req.query.search
     ? {
         $or: [
@@ -13,10 +34,9 @@ module.exports.allUsers = asyncHandler(async (req, res) => {
         ],
       }
     : {};
+
   const users = await User.find(keyword)
-    .find({
-      email: { $ne: req.decoded.email },
-    })
+    .find({ gymId: gymId, email: { $ne: req.decoded.email } })
     .populate("assignedBy")
     .populate("admin");
 
@@ -24,29 +44,72 @@ module.exports.allUsers = asyncHandler(async (req, res) => {
 });
 
 module.exports.AllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}).populate("assignedBy").populate("admin");
+  const gymId = req.query.gymId;
+  const user = await User.findOne({ email: req.decoded.email });
+
+  if (user.role === "admin" && user.superAdmin) {
+    const users = await User.find({}).populate("assignedBy").populate("admin");
+    return res.json(users);
+  }
+
+  const users = await User.find({ gymId: gymId })
+    .populate("assignedBy")
+    .populate("admin");
+
   res.json(users);
 });
 
+module.exports.trainers = asyncHandler(async (req, res) => {
+  const gymId = req.query.gymId;
+  const user = await User.findOne({ email: req.decoded.email });
+
+  if (user.role === "admin" && user.superAdmin) {
+    const trainers = await User.find({ role: "trainer" }).populate(
+      "assignedBy"
+    );
+
+    return res.status(200).json({
+      status: "success",
+      data: trainers,
+    });
+  }
+
+  const trainers = await User.find({ gymId: gymId, role: "trainer" }).populate(
+    "assignedBy"
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: trainers,
+  });
+});
+
 module.exports.students = asyncHandler(async (req, res) => {
-  try {
+  const gymId = req.query.gymId;
+  const user = await User.findOne({ email: req.decoded.email });
+
+  if (user.role === "admin" && user.superAdmin) {
     const students = await User.find({ role: "user" }).populate("assignedBy");
 
-    res.status(200).json({
+    return res.status(200).json({
       status: "success",
       data: students,
     });
-  } catch (error) {
-    res.status(500).json({
-      status: "fail",
-      message: error?.message,
-    });
   }
+
+  const students = await User.find({ gymId: gymId, role: "user" }).populate(
+    "assignedBy"
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: students,
+  });
 });
 
 module.exports.addUser = asyncHandler(async (req, res) => {
   const email = req.params.email;
-  const { password, name } = req.body;
+  const { password, name, gymId } = req.body;
   const isExist = await User.findOne({ email: email });
 
   if (isExist) {
@@ -54,29 +117,21 @@ module.exports.addUser = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
 
-  const admin = await User.findOne({ role: "admin" });
+  const superAdmin = await User.findOne({ role: "admin", superAdmin: true });
 
-  auth()
-    .createUser({
-      email: email,
-      password,
-      displayName: name,
-    })
-    .then((userRecord) => {
-      // console.log("Successfully created new user:", userRecord.uid);
-    })
-    .catch((error) => {
-      console.error("Error creating new user:", error);
-    });
+  const admin = await User.findOne({ gymId: gymId, role: "admin" });
+
+  await auth().createUser({ email: email, password, displayName: name });
 
   const user = await User.create({
     ...req.body,
-    assignedBy: req.decoded._id,
-    admin: admin._id,
+    assignedBy: superAdmin._id === req.decoded.id ? null : req.decoded.id,
+    admin: admin ? admin._id : null,
+    superAdmin: false,
   });
 
   res.status(201).json({
-    status: "success",
+    status: "succes",
     data: user,
   });
 });
@@ -91,11 +146,9 @@ module.exports.signupUser = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
 
-  const admin = await User.findOne({ role: "admin" });
-
   const user = await User.create({
     ...req.body,
-    admin: admin._id,
+    superAdmin: false,
   });
 
   res.status(201).json({
@@ -155,4 +208,15 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
       message: err?.message,
     });
   }
+});
+
+module.exports.adminsforsuperAdmin = asyncHandler(async (req, res) => {
+  const admins = await User.find({ role: "admin", superAdmin: false }).populate(
+    "gymId"
+  );
+
+  return res.status(200).json({
+    status: "success",
+    data: admins,
+  });
 });

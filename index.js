@@ -21,6 +21,7 @@ const exerciseListRoutes = require("./routes/exerciseList.routes");
 const exerciseRoutes = require("./routes/exercise.routes");
 const dietFoodListRoutes = require("./routes/dietFoodList.routes");
 const dietRoutes = require("./routes/diet.routes");
+const gymRoutes = require("./routes/gym.routes");
 
 const { initializeApp } = require("firebase-admin/app");
 const { credential } = require("firebase-admin");
@@ -86,6 +87,7 @@ app.use(
   dietFoodListRoutes
 );
 app.use("/api/diet", verifyJWT, dietRoutes);
+app.use("/api/gym", verifyJWT, gymRoutes);
 
 async function run() {
   try {

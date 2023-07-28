@@ -65,6 +65,16 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    gymId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Gym",
+    },
+    superAdmin: {
+      type: Boolean,
+      enum: [true, false],
+      required: true,
+      defalut: false,
+    },
     approved: {
       type: Boolean,
       enum: [true, false],
